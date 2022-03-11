@@ -224,6 +224,10 @@ sub _diff_fields {
                 if ($self->{opts}{tolerant}) {
                     for ($f1, $f2) {
                         s/ COLLATE [\w_]+//gi;
+			s/ CHARACTER SET [\w_]+//gi;
+                        s/ CHARSET [\w_]+//gi;
+                        s/ ENGINE [\w_]+//gi;
+                        s/ENGINE [\w_]+//gi;
                     }
                 }
                 if ($f1 ne $f2) {
@@ -507,6 +511,10 @@ sub _diff_options {
       for ($options1, $options2) {
         s/ AUTO_INCREMENT=\d+//gi;
         s/ COLLATE=[\w_]+//gi;
+	s/ CHARACTER SET=[\w_]+//gi;
+        s/ CHARSET=[\w_]+//gi;
+        s/ ENGINE=[\w_]+//gi;
+        s/ENGINE=[\w_]+//gi;
       }
     }
 
