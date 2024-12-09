@@ -159,7 +159,7 @@ sub diff {
         #     $out .= join "\n", keys %used_tables;
         #     $out .= "\n-- END OF TABLES LIST \n";
         # }
-        # $out .= join '', @changes;
+        $out .= join '', @changes;
     }
     if (@fk_changes) {
         $out .= join '', @fk_changes;
