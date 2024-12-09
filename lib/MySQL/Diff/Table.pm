@@ -238,11 +238,27 @@ sub _parse {
         croak "unparsable line in definition for table '$self->{name}':\n$_";
     }
 
+    $self->{lines} = [ grep !/FOREIGN KEY/, grep ! /^\s*$/, split /(?=^)/m, $self->{def} ];
+
+    my @_lines = @{$self->{lines}};
+
+    for my $i (0 .. @_lines) {
+     my $lchar = unpack('A1', $_lines[$i]);
+
+     if($lchar eq ")"){
+      $_lines[$i-1] =~ s/,$//;
+     }
+    }
+
+    $self->{lines} = [ @_lines ];
+
     warn "table '$self->{name}' didn't have terminator\n"
         unless defined $self->{options};
 
     @lines = grep ! m{^/\*!40\d{3} .*? \*/;}, @lines;
     @lines = grep ! m{^(SET |DROP TABLE)}, @lines;
+
+    $self->{def} = join "", @{$self->{lines}};
 
     warn "table '$self->{name}' had trailing garbage:\n", join '', @lines
         if @lines;
