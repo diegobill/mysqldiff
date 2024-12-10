@@ -126,6 +126,7 @@ sub diff {
         if (my $table2 = $self->db2->table_by_name($name)) {
             debug(3,"comparing tables called '$name'");
             push @changes, $self->_diff_tables($table1, $table2);
+            push @fk_changes, $self->_diff_tables_foreign_key($table1, $table2);
         } else {
             debug(3,"table '$name' dropped");
             push @changes, "DROP TABLE $name;\n\n"
@@ -197,12 +198,21 @@ EOF
 sub _diff_tables {
     my $self = shift;
     my @changes = (
-	$self->_diff_foreign_key_drop(@_),
         $self->_diff_fields(@_),
         $self->_diff_indices(@_),
         $self->_diff_primary_key(@_),
-        $self->_diff_foreign_key_add(@_),
         $self->_diff_options(@_)        
+    );
+
+    $changes[-1] =~ s/\n*$/\n/  if (@changes);
+    return @changes;
+}
+
+sub _diff_tables_foreign_key {
+    my $self = shift;
+    my @changes = (
+	$self->_diff_foreign_key_drop(@_),
+        $self->_diff_foreign_key_add(@_) 
     );
 
     $changes[-1] =~ s/\n*$/\n/  if (@changes);
