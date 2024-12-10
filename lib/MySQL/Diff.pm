@@ -254,6 +254,8 @@ sub _diff_fields {
                         s/ CHARSET [\w_]+//gi;
                         s/ ENGINE [\w_]+//gi;
                         s/ENGINE [\w_]+//gi;
+                        s/ AVG_ROW_LENGTH [\w_]+//gi;
+                        s/AVG_ROW_LENGTH [\w_]+//gi;
                     }
                 }
                 if ($f1 ne $f2) {
@@ -562,10 +564,13 @@ sub _diff_options {
         s/ CHARSET=[\w_]+//gi;
         s/ ENGINE=[\w_]+//gi;
         s/ENGINE=[\w_]+//gi;
+        s/ AVG_ROW_LENGTH=[\w_]+//gi;
+        s/AVG_ROW_LENGTH=[\w_]+//gi;
       }
     }
 
     if ($options1 ne $options2) {
+        debug(1,"option '$name' changed '$options1' and '$options2'");
         my $change = "ALTER TABLE $name $options2;";
         $change .= " # was " . ($options1 || 'blank') unless $self->{opts}{'no-old-defs'};
         $change .= "\n";

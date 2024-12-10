@@ -293,10 +293,10 @@ sub _get_defs {
         }
     }
 
-    my $fh = IO::File->new("mysqldump -d $single_transaction $args $db $tables 2>&1 |")
+    my $fh = IO::File->new("mysqldump -d --skip-add-locks --skip-lock-tables $single_transaction $args $db $tables 2>&1 |")
       or die "Couldn't read ${db}'s table defs via mysqldump: $!\n";
 
-    debug( 3, "running mysqldump -d $single_transaction $args $db $tables" );
+    debug( 3, "running mysqldump -d --skip-add-locks --skip-lock-tables $single_transaction $args $db $tables" );
     my $defs = $self->{_defs} = [<$fh>];
     $fh->close;
     my $exit_status = $? >> 8;
