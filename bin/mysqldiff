@@ -130,6 +130,10 @@ password to use when connecting to server
 
 socket to use when connecting to server
 
+=item C<--skip-triggers>
+
+ignore triggers when comparing databases
+
 =back
 
 =head2 For <databaseN> only, where N == 1 or 2
@@ -212,7 +216,7 @@ GetOptions(\%opts, "help|?", "debug|d:i", "apply|A", "batch-apply|B",
            "host|h=s", "port|P=s", "socket|s=s", "user|u=s", "password|p:s",
            "host1=s",  "port1=s",  "socket1=s",  "user1=s",  "password1:s",
            "host2=s",  "port2=s",  "socket2=s",  "user2=s",  "password2:s",
-           "tolerant|i", "single-transaction|S", "list-tables|l"
+           "tolerant|i", "single-transaction|S", "list-tables|l", "skip-triggers"
           ) or usage();
 
 usage() if (@ARGV != 2 or $opts{help});
@@ -253,6 +257,7 @@ Options:
   -t,  --table-re=REGEXP     restrict comparisons to tables matching REGEXP
   -i,  --tolerant            ignore DEFAULT, AUTO_INCREMENT, COLLATE, and formatting changes
   -S,  --single-transaction  perform DB dump in transaction
+  --skip-triggers            ignore triggers when comparing databases
 
   -h,  --host=...            connect to host
   -P,  --port=...            use this port for connection

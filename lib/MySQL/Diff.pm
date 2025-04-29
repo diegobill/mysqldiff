@@ -592,7 +592,7 @@ sub _load_database {
     }
 
     if ($arg =~ /^db:(.*)/) {
-        return MySQL::Diff::Database->new(db => $1, auth => \%auth, 'single-transaction' => $self->{opts}{'single-transaction'}, 'table-re' => $self->{opts}{'table-re'});
+        return MySQL::Diff::Database->new(db => $1, auth => \%auth, 'single-transaction' => $self->{opts}{'single-transaction'}, 'table-re' => $self->{opts}{'table-re'}, 'skip-triggers' => $self->{opts}{'skip-triggers'});
     }
 
     if ($self->{opts}{"dbh"}              ||
@@ -601,18 +601,18 @@ sub _load_database {
         $self->{opts}{"user$authnum"}     ||
         $self->{opts}{"password$authnum"} ||
         $self->{opts}{"socket$authnum"}) {
-        return MySQL::Diff::Database->new(db => $arg, auth => \%auth, 'single-transaction' => $self->{opts}{'single-transaction'}, 'table-re' => $self->{opts}{'table-re'});
+        return MySQL::Diff::Database->new(db => $arg, auth => \%auth, 'single-transaction' => $self->{opts}{'single-transaction'}, 'table-re' => $self->{opts}{'table-re'}, 'skip-triggers' => $self->{opts}{'skip-triggers'});
     }
 
     if (-f $arg) {
-        return MySQL::Diff::Database->new(file => $arg, auth => \%auth, 'single-transaction' => $self->{opts}{'single-transaction'}, 'table-re' => $self->{opts}{'table-re'});
+        return MySQL::Diff::Database->new(file => $arg, auth => \%auth, 'single-transaction' => $self->{opts}{'single-transaction'}, 'table-re' => $self->{opts}{'table-re'}, 'skip-triggers' => $self->{opts}{'skip-triggers'});
     }
 
     my %dbs = MySQL::Diff::Database::available_dbs(%auth);
     debug(2, "  available databases: ", (join ', ', keys %dbs), "\n");
 
     if ($dbs{$arg}) {
-        return MySQL::Diff::Database->new(db => $arg, auth => \%auth, 'single-transaction' => $self->{opts}{'single-transaction'}, 'table-re' => $self->{opts}{'table-re'});
+        return MySQL::Diff::Database->new(db => $arg, auth => \%auth, 'single-transaction' => $self->{opts}{'single-transaction'}, 'table-re' => $self->{opts}{'table-re'}, 'skip-triggers' => $self->{opts}{'skip-triggers'});
     }
 
     warn "'$arg' is not a valid file or database.\n";

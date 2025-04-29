@@ -71,6 +71,7 @@ sub new {
     $self->{_source}{dbh} = $p{dbh} if $p{dbh};
     $self->{'single-transaction'} = $p{'single-transaction'};
     $self->{'table-re'} = $p{'table-re'};
+    $self->{'skip-triggers'} = $p{'skip-triggers'};
 
     if ($p{file}) {
         $self->_canonicalise_file($p{file});
@@ -284,6 +285,7 @@ sub _get_defs {
 
     my $args   = $self->{_source}{auth};
     my $single_transaction = $self->{'single-transaction'} ? "--single-transaction" : "";
+    my $skip_triggers = $self->{'skip-triggers'} ? "--skip-triggers" : "";
     my $tables = '';                       #dump all tables by default
     if ( my $table_re = $self->{'table-re'} ) {
         $tables = $self->_get_tables_to_dump($db);
@@ -293,10 +295,10 @@ sub _get_defs {
         }
     }
 
-    my $fh = IO::File->new("mysqldump -d --skip-add-locks --skip-lock-tables $single_transaction $args $db $tables 2>&1 |")
+    my $fh = IO::File->new("mysqldump -d --skip-add-locks --skip-lock-tables $single_transaction $skip_triggers $args $db $tables 2>&1 |")
       or die "Couldn't read ${db}'s table defs via mysqldump: $!\n";
 
-    debug( 3, "running mysqldump -d --skip-add-locks --skip-lock-tables $single_transaction $args $db $tables" );
+    debug( 3, "running mysqldump -d --skip-add-locks --skip-lock-tables $single_transaction $skip_triggers $args $db $tables" );
     my $defs = $self->{_defs} = [<$fh>];
     $fh->close;
     my $exit_status = $? >> 8;
