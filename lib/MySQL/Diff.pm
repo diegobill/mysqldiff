@@ -260,7 +260,7 @@ sub _diff_fields {
                 }
                 if ($f1 ne $f2) {
                     if (not $self->{opts}{tolerant} or 
-                        (($f1 !~ m/$f2\(\d+,\d+\)/) and
+                        (($f1 !~ m/\Q$f2\E\(\d+,\d+\)/) and
                          ($f1 ne "$f2 DEFAULT '' NOT NULL") and
                          ($f1 ne "$f2 NOT NULL") ))
                     {

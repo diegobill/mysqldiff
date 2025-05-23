@@ -243,6 +243,7 @@ sub _parse {
     my @_lines = @{$self->{lines}};
 
     for my $i (0 .. @_lines) {
+     next unless defined $_lines[$i];
      my $lchar = unpack('A1', $_lines[$i]);
 
      if($lchar eq ")"){
